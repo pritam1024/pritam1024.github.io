@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="./index.css" />
+    <title>News Feed</title>
+    <script src="./index.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Latest News Search</h1>
+    </header>
+    <div class="container">
+      <p class="refresh-timer">
+        Refreshes in <span id="time">30</span> seconds.
+      </p>
+      <div class="search-bar">
+        <input type="text" name="search" placeholder="Search" />
+        <div onClick="getFiltered()">
+          <img src="./search.svg" alt="search" />
+        </div>
+      </div>
+      <main></main>
+    </div>
+    <footer>
+      <p></p>
+    </footer>
+  </body>
+</html>
