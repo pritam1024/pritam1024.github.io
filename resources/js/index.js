@@ -2,6 +2,7 @@ let pageNo = 1;
 let query = "reactjs";
 const URL =
   "https://newsapi.org/v2/everything?apiKey=363d26dd3d664d199ca63adc371e22aa&pageSize=10&page=";
+let searchInput = document.getElementsByTagName("input");
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.has("query")) {
   query = urlParams.get("query");
@@ -15,8 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const observer = new IntersectionObserver(handleIntersect, options);
   observer.observe(document.querySelector("footer"));
+  searchInput[0].addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      getFiltered();
+    }
+  });
 });
-
 function handleIntersect(entries) {
   if (entries[0].isIntersecting) {
     getData(query, pageNo);
@@ -24,14 +30,14 @@ function handleIntersect(entries) {
 }
 function getData(query, pgNo = 1) {
   clearInterval(timer);
-  timer = countDown();
   let main = document.querySelector("main");
   pageNo = pgNo === 1 ? pgNo : pageNo;
   let searchUrl = URL + pageNo + encodeURI("&q=" + query);
-  console.log(searchUrl);
+  searchInput[0].value = query;
   fetch(searchUrl)
     .then(response => response.json())
     .then(data => {
+      timer = countDown();
       if (data.articles.length) {
         data.articles.forEach(item => {
           let a = document.createElement("a");
@@ -45,16 +51,14 @@ function getData(query, pgNo = 1) {
           a.href = item.url;
           a.innerHTML = "more";
           newsHeader.innerHTML = item.title;
-          p.innerHTML = item.content;
+          p.innerHTML = item.content ? item.content : "No Content";
           p.appendChild(a);
           img.src = item.urlToImage;
-          img.alt = "news image";
+          img.alt = "No Image";
           newsCard.appendChild(newsHeader);
           cardContent.appendChild(img);
           cardContent.appendChild(p);
-          // cardContent.appendChild(a);
           newsCard.appendChild(cardContent);
-          // a.appendChild(newsCard);
           main.appendChild(newsCard);
         });
       } else {
@@ -65,6 +69,8 @@ function getData(query, pgNo = 1) {
       }
     })
     .catch(e => {
+      let timer = document.getElementsByClassName("refresh-timer");
+      timer[0].remove();
       let div = document.createElement("div");
       div.innerHTML = "Something Went Wrong";
       div.className = "error";
@@ -77,19 +83,21 @@ function countDown() {
   const timer = setInterval(function() {
     time -= 1;
     document.getElementById("time").innerHTML = time;
-    if (time === 0) location.reload();
+    if (!time) {
+      if (!document.getElementsByClassName("error")) {
+        location.reload();
+      } else {
+        location.href = "http://127.0.0.1:5500";
+      }
+    }
   }, 1000);
   return timer;
 }
 function getFiltered() {
-  let input = document.getElementsByTagName("input");
-  query = input[0].value.toLowerCase();
+  query = searchInput[0].value;
+  console.log(searchInput);
   if (query && query.length) {
     document.location.search = "query=" + query;
-    let newsCard = document.getElementsByClassName("news-card");
-    const newsCardArr = Array.from(newsCard);
-    getData(query);
-    newsCardArr.forEach(el => el.remove());
   } else {
     return;
   }
