@@ -39,6 +39,7 @@ function getData(query, pgNo = 1) {
     .then(data => {
       timer = countDown();
       if (data.articles.length) {
+        console.log(data.articles);
         data.articles.forEach(item => {
           let a = document.createElement("a");
           let newsCard = document.createElement("div");
@@ -49,12 +50,15 @@ function getData(query, pgNo = 1) {
           cardContent.className = "news-content";
           let img = document.createElement("img");
           a.href = item.url;
+          a.target = "blank";
           a.innerHTML = "more";
           newsHeader.innerHTML = item.title;
           p.innerHTML = item.content ? item.content : "No Content";
           p.appendChild(a);
-          img.src = item.urlToImage;
-          img.alt = "No Image";
+          img.src = item.urlToImage
+            ? item.urlToImage
+            : "./resources/assets/no_image.png";
+          img.onerror = "this.onerror=null;this.alt='No Image';";
           newsCard.appendChild(newsHeader);
           cardContent.appendChild(img);
           cardContent.appendChild(p);
@@ -84,10 +88,10 @@ function countDown() {
     time -= 1;
     document.getElementById("time").innerHTML = time;
     if (!time) {
-      if (!document.getElementsByClassName("error")) {
+      if (document.getElementsByClassName("error").length === 0) {
         location.reload();
       } else {
-        location.href = "http://127.0.0.1:5500";
+        location.href = location.origin;
       }
     }
   }, 1000);
