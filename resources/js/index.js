@@ -55,6 +55,7 @@ function getData(query, pgNo = 1) {
           newsHeader.innerHTML = item.title;
           p.innerHTML = item.content ? item.content : "No Content";
           p.appendChild(a);
+          img.alt = "News Image";
           img.src = item.urlToImage
             ? item.urlToImage
             : "./resources/assets/no_image.png";
