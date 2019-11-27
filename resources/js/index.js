@@ -39,7 +39,6 @@ function getData(query, pgNo = 1) {
     .then(data => {
       timer = countDown();
       if (data.articles.length) {
-        console.log(data.articles);
         data.articles.forEach(item => {
           let a = document.createElement("a");
           let newsCard = document.createElement("div");
@@ -100,9 +99,9 @@ function countDown() {
 }
 function getFiltered() {
   query = searchInput[0].value;
-  console.log(searchInput);
-  if (query && query.length) {
-    document.location.search = "query=" + query;
+  const regex = new RegExp("[a-zA-Z]");
+  if (regex.test(query)) {
+    document.location.search = "query=" + query.trim();
   } else {
     return;
   }
