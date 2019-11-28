@@ -13,6 +13,7 @@ updates:-
 1)Enabled search on Enter key press
 2)changed alt for image to no image
 3)added conditional reload for valid content and no content
+4)improved folder structure
 
 
 News Fed V1.1.0   Date:-28/11/19
